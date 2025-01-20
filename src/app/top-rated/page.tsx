@@ -48,7 +48,7 @@ export default function TopRated() {
         <Typography variant="h6" color="error" align="center">
           {error}
         </Typography>
-      ) : movies.length === 0 ? (
+      ) : movies?.length === 0 ? (
         <Typography
           variant="h6"
           align="center"

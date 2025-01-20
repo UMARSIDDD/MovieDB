@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, InputBase, IconButton, Menu, MenuItem, Drawer } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box, InputBase, IconButton, Menu, MenuItem } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
 import MovieIcon from '@mui/icons-material/Movie';
 import SearchIcon from '@mui/icons-material/Search';
@@ -32,8 +32,6 @@ export default function Navbar() {
     setSearchQueryLocal('');
     dispatch(setSearchQuery(''));
     dispatch(setCurrentPage(1));
-    const type = path === '/' ? 'popular' : path === '/top-rated' ? 'top_rated' : 'upcoming';
-    dispatch(fetchMoviesByType({ type}));
     router.push(path);
   };
 
@@ -41,11 +39,8 @@ export default function Navbar() {
     dispatch(setSearchQuery(debouncedSearch));
     if (debouncedSearch.trim()) {
       dispatch(searchMoviesAsync(debouncedSearch));
-    } else {
-      const path = pathname === '/' ? 'popular' : pathname === '/top-rated' ? 'top_rated' : 'upcoming';
-      dispatch(fetchMoviesByType({ type: path, page: 1 }));
     }
-  }, [debouncedSearch, pathname]);
+  }, [debouncedSearch ]);
 
   // Mobile menu state
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -60,9 +55,8 @@ export default function Navbar() {
   };
 
   return (
-    <AppBar position="static" sx={{bgcolor:'#343a3f'}} elevation={1}>
-      <Toolbar className='flex justify-between'>
-        
+    <AppBar position="static" sx={{ bgcolor: '#343a3f' }} elevation={1}>
+      <Toolbar className="flex justify-between">
         {/* MovieDB Logo: Reset to Home */}
         <Box
           sx={{
@@ -85,13 +79,10 @@ export default function Navbar() {
           </Typography>
         </Box>
 
-       
-
         {/* Navigation Links for Desktop */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
           {nav.map(({ path, label }) => {
             const isActive = pathname === path;
-
             return (
               <Button
                 key={path}
@@ -104,8 +95,9 @@ export default function Navbar() {
             );
           })}
         </Box>
-         {/* Search Box */}
-         <Box
+
+        {/* Search Box */}
+        <Box
           sx={{
             flexGrow: 1,
             position: 'relative',
@@ -128,7 +120,7 @@ export default function Navbar() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color:'black'
+              color: 'black'
             }}
           >
             <SearchIcon />
@@ -162,7 +154,6 @@ export default function Navbar() {
         >
           {nav.map(({ path, label }) => {
             const isActive = pathname === path;
-
             return (
               <MenuItem
                 key={path}
