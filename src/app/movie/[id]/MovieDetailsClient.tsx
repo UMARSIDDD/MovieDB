@@ -1,11 +1,8 @@
 "use client";
 
 import {
-  Container,
-  Grid2,
   Typography,
   Box,
-  Paper,
   Chip,
   Avatar,
 } from "@mui/material";

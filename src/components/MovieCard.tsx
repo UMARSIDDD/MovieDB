@@ -5,12 +5,20 @@ import Link from "next/link";
 import { Movie } from "../types";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
+  const posterUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    : "/images/no-image.jpg";
+  const rating = movie.vote_average ? movie.vote_average.toFixed(1) : "N/A";
+
   return (
-    <Link href={`/movie/${movie.id}`} style={{ textDecoration: "none" }}>
+    <Link 
+      href={`/movie/${movie.id}`} 
+      style={{ textDecoration: "none" }}
+    >
       <Card
         sx={{
-          height: "clamp(90%, 100%, 100%)",
-          width: "clamp(90%, 100%, 100%)",
+          height: "100%",
+          width: "100%",
           display: "flex",
           flexDirection: "column",
           transition: "transform 0.2s ease",
@@ -23,16 +31,12 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         <CardMedia
           component="img"
           sx={{
-            height: "clamp(30%, 40%, 50%)",
+            height: "50%",
             objectFit: "cover",
-            backgroundColor: "#f0f0f0", // Fixed typo (backbackgroundColor -> backgroundColor)
+            backgroundColor: "#f0f0f0",
           }}
-          image={
-            movie.poster_path
-              ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-              : "/images/no-image.jpg" // Reference the fallback image from the public directory
-          }
-          alt={movie.title}
+          image={posterUrl}
+          alt={movie.title || "No title available"}
         />
         <CardContent>
           <Typography
@@ -40,7 +44,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             component="div"
             sx={{
               fontWeight: "semibold",
-              fontSize: "clamp(0.5rem, 2vw, 1.2rem)",
+              fontSize: "1rem",
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
@@ -56,10 +60,10 @@ export default function MovieCard({ movie }: { movie: Movie }) {
               color="#f0f0f0"
               sx={{
                 ml: 1,
-                fontSize: "clamp(0.5rem, 2vw, 1rem)",
+                fontSize: "0.9rem",
               }}
             >
-              <strong>Rating</strong>: {movie.vote_average?.toFixed(1) ?? "N/A"}
+              <strong>Rating</strong>: {rating}
             </Typography>
           </Box>
         </CardContent>

@@ -6,7 +6,6 @@ import {
   Typography,
   Box,
   CircularProgress,
-  Pagination,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchMoviesByType } from "../store/moviesSlice";
@@ -34,9 +33,10 @@ export default function Home() {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setPage(value); // Update the page state on pagination change
+    setPage(value); 
   };
   return (
+    <>
     <Container  maxWidth="xl" sx={{ py: 4}}>
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
@@ -68,5 +68,7 @@ export default function Home() {
         </>
       )}
     </Container>
+    </>
+
   );
 }

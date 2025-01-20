@@ -13,11 +13,11 @@ export async function fetchMovies(
 
   const data = await response.json();
 
-  // Return movie data with pagination details
+
   return {
-    items: data.results, // The movie items
-    totalPages: data.total_pages, // Total number of pages
-    currentPage: page, // The current page
+    items: data.results, 
+    totalPages: data.total_pages, 
+    currentPage: page,
   };
 }
 

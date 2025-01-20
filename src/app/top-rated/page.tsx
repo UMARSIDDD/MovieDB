@@ -35,7 +35,7 @@ export default function TopRated() {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setPage(value); // Update page when user changes the page
+    setPage(value);
   };
 
   return (
