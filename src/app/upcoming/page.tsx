@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Container, Typography, Box, CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { fetchMoviesByType } from "../../store/moviesSlice";
+import { fetchMoviesByType, setCurrentPage } from "../../store/moviesSlice";
 import MovieGrid from "../../components/MovieGrid";
 import CustomPagination from "@/src/components/CustomPagination";
 
@@ -18,18 +18,14 @@ export default function Upcoming() {
     currentPage,
   } = useSelector((state: RootState) => state.movies);
 
-  const [page, setPage] = useState(currentPage);
 
   useEffect(() => {
-    dispatch(fetchMoviesByType({ type: "upcoming", page }));
-  }, [page]);
+    dispatch(fetchMoviesByType({ type: "upcoming",page:currentPage }));
+  }, [currentPage]);
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
-    setPage(value);
-  };
+ const handlePageChange = useCallback((event: React.ChangeEvent<unknown>, value: number) => {
+       dispatch(setCurrentPage(value));
+     }, [dispatch]);
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -56,7 +52,7 @@ export default function Upcoming() {
           {totalPages > 1 && (
             <CustomPagination
               totalPages={totalPages}
-              currentPage={page}
+              currentPage={currentPage}
               onPageChange={handlePageChange}
             />
           )}

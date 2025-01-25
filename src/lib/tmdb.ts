@@ -7,8 +7,10 @@ export async function fetchMovies(
   type: "popular" | "top_rated" | "upcoming",
   page = 1
 ) {
+  try{
+  const validPage = Math.min(page, 500);
   const response = await fetch(
-    `${BASE_URL}/movie/${type}?api_key=${API_KEY}&language=en-US&page=${page}`
+    `${BASE_URL}/movie/${type}?api_key=${API_KEY}&language=en-US&page=${validPage}`
   );
 
   const data = await response.json();
@@ -16,9 +18,17 @@ export async function fetchMovies(
 
   return {
     items: data.results, 
-    totalPages: data.total_pages, 
-    currentPage: page,
+    totalPages: type === "popular" ? 500 : data.total_pages, 
+    currentPage: validPage,
   };
+}
+catch(error){
+  if (error instanceof Error) {
+    return { error: error.message };
+  } else {
+    return { error: "An unknown error occurred" };
+  }
+}
 }
 
 export async function fetchMovieDetails(id: string) {
@@ -34,9 +44,9 @@ export async function fetchMovieCredits(id: string) {
   );
   return response.json();
 }
-export async function searchMovies(query: string) {
+export async function searchMovies(query: string,page:number){
   const response = await fetch(
-    `${BASE_URL}/search/movie?api_key=${API_KEY}&language=en-US&query=${query}&page=1`
+    `${BASE_URL}/search/movie?api_key=${API_KEY}&language=en-US&query=${query}&page=${page}`
   );
   return response.json();
 }

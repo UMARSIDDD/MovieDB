@@ -1,14 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  Container,
-  Typography,
-  Box,
-  CircularProgress,
-} from "@mui/material";
+import { useCallback, useEffect } from "react";
+import { Container, Typography, Box, CircularProgress } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchMoviesByType } from "../store/moviesSlice";
+import {
+  fetchMoviesByType,
+  searchMoviesAsync,
+  setCurrentPage,
+} from "../store/moviesSlice";
 import { AppDispatch, RootState } from "../store/store";
 import MovieGrid from "../components/MovieGrid";
 import CustomPagination from "../components/CustomPagination";
@@ -21,23 +20,26 @@ export default function Home() {
     error,
     totalPages,
     currentPage,
+    searchQuery,
   } = useSelector((state: RootState) => state.movies);
 
-  const [page, setPage] = useState(currentPage);
-
   useEffect(() => {
-    dispatch(fetchMoviesByType({ type: "popular", page }));
-  }, [page]);
+    if (searchQuery.trim()) {
+      dispatch(searchMoviesAsync({ query: searchQuery, page: currentPage }));
+    } else {
+      dispatch(fetchMoviesByType({ type: "popular", page: currentPage }));
+    }
+  }, [currentPage, searchQuery]);
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
-    setPage(value); 
-  };
+  const handlePageChange = useCallback(
+    (event: React.ChangeEvent<unknown>, value: number) => {
+      dispatch(setCurrentPage(value));
+    },
+    [dispatch]
+  );
+
   return (
-    <>
-    <Container  maxWidth="xl" sx={{ py: 4}}>
+    <Container maxWidth="xl" sx={{ py: 4 }}>
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
           <CircularProgress />
@@ -46,7 +48,7 @@ export default function Home() {
         <Typography variant="h6" color="error" align="center">
           {error}
         </Typography>
-      ) : movies?.length === 0? (
+      ) : movies?.length === 0 ? (
         <Typography
           variant="h6"
           align="center"
@@ -59,16 +61,14 @@ export default function Home() {
         <>
           <MovieGrid movies={movies} />
           {totalPages > 1 && (
-           <CustomPagination
-           totalPages={totalPages}
-           currentPage={page}
-           onPageChange={handlePageChange}
-         />
+            <CustomPagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
           )}
         </>
       )}
     </Container>
-    </>
-
   );
 }

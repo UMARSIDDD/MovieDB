@@ -35,4 +35,4 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
   );
 };
 
-export default CustomPagination;
+export default React.memo(CustomPagination);

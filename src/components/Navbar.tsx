@@ -6,10 +6,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import MovieIcon from '@mui/icons-material/Movie';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useDebounce } from '../hooks/useDebounce';
-import { fetchMoviesByType, searchMoviesAsync, setCurrentPage, setSearchQuery } from '../store/moviesSlice';
-import { AppDispatch } from '../store/store';
+import { setCurrentPage, setSearchQuery } from '../store/moviesSlice';
+import { AppDispatch, RootState } from '../store/store';
 
 export default function Navbar() {
   const nav = [
@@ -19,29 +19,30 @@ export default function Navbar() {
   ];
   const pathname = usePathname();
   const router = useRouter();
-  const [searchQuery, setSearchQueryLocal] = useState('');
   const dispatch = useDispatch<AppDispatch>();
+  const { searchQuery } = useSelector((state: RootState) => state.movies);
 
-  const debouncedSearch = useDebounce(searchQuery, 500);
+  const debouncedSearch = useDebounce(searchQuery, 1000);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQueryLocal(e.target.value);
+    dispatch(setSearchQuery(e.target.value));
+
   };
 
   const handleNavigation = (path: string) => {
-    setSearchQueryLocal('');
     dispatch(setSearchQuery(''));
     dispatch(setCurrentPage(1));
     router.push(path);
   };
-
   useEffect(() => {
-    dispatch(setSearchQuery(debouncedSearch));
     if (debouncedSearch.trim()) {
-      dispatch(searchMoviesAsync(debouncedSearch));
+      dispatch(setCurrentPage(1));
+      if (pathname !== '/') {
+        router.push('/'); 
+      }
+      dispatch(setSearchQuery(debouncedSearch));
     }
-  }, [debouncedSearch ]);
-
+  }, [debouncedSearch]);
   // Mobile menu state
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
@@ -110,6 +111,7 @@ export default function Navbar() {
             marginRight: 2,
             width: 'auto',
             maxWidth: 400,
+            display:pathname.startsWith('/movie/') ? 'none' : 'block',
           }}
         >
           <Box

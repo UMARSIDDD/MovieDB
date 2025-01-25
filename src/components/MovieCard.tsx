@@ -3,6 +3,7 @@
 import { Card, CardContent, CardMedia, Typography, Box } from "@mui/material";
 import Link from "next/link";
 import { Movie } from "../types";
+import Image from "next/image";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
   const posterUrl = movie.poster_path
@@ -28,16 +29,21 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           bgcolor: "#282c33",
         }}
       >
-        <CardMedia
-          component="img"
-          sx={{
-            height: "50%",
-            objectFit: "cover",
-            backgroundColor: "#f0f0f0",
-          }}
-          image={posterUrl}
-          alt={movie.title || "No title available"}
+      <CardMedia
+        sx={{
+          height: "50%",
+          objectFit: "cover",
+          backgroundColor: "#f0f0f0",
+        }}
+      >
+        <Image
+          src={posterUrl}
+          alt={movie.title}
+          priority
+          width={500}
+          height={550}  
         />
+      </CardMedia>
         <CardContent>
           <Typography
             variant="h6"

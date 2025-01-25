@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Container,
   Typography,
   Box,
   CircularProgress,
-  Pagination,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { fetchMoviesByType } from "../../store/moviesSlice";
+import { fetchMoviesByType, setCurrentPage } from "../../store/moviesSlice";
 import MovieGrid from "../../components/MovieGrid";
 import CustomPagination from "@/src/components/CustomPagination";
 
@@ -24,19 +23,14 @@ export default function TopRated() {
     currentPage,
   } = useSelector((state: RootState) => state.movies);
 
-  const [page, setPage] = useState(currentPage);
-
   // Fetch "Top Rated" movies on component mount and when page changes
   useEffect(() => {
-    dispatch(fetchMoviesByType({ type: "top_rated", page }));
-  }, [page]);
+    dispatch(fetchMoviesByType({ type: "top_rated", page: currentPage }));
+  }, [currentPage]);
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
-    setPage(value);
-  };
+  const handlePageChange = useCallback((event: React.ChangeEvent<unknown>, value: number) => {
+    dispatch(setCurrentPage(value));
+  }, [dispatch]);
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -63,7 +57,7 @@ export default function TopRated() {
           {totalPages > 1 && (
             <CustomPagination
               totalPages={totalPages}
-              currentPage={page}
+              currentPage={currentPage}
               onPageChange={handlePageChange}
             />
           )}

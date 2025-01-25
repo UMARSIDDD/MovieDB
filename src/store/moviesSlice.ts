@@ -32,9 +32,13 @@ export const fetchMoviesByType = createAsyncThunk(
 
 export const searchMoviesAsync = createAsyncThunk(
   'movies/search',
-  async (query: string) => {
-    const response = await searchMovies(query);
-    return response.results;
+  async ({ query, page=1 }: { query: string; page?: number }) => {
+    const data = await searchMovies(query, page);
+    return {
+      items: data.results,
+      totalPages: data.total_pages,
+      currentPage: page,
+    };
   }
 );
 
@@ -55,11 +59,12 @@ const moviesSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchMoviesByType.fulfilled, (state, action: PayloadAction<{ items: Movie[]; totalPages: number; currentPage: number }>) => {
+      .addCase(fetchMoviesByType.fulfilled, (state, action) => {
+        const { items, totalPages, currentPage } = action.payload
         state.loading = false;
-        state.totalPages = action.payload.totalPages;
-        state.currentPage = action.payload.currentPage;
-        state.items = action.payload.items;
+        state.totalPages = totalPages;
+        state.currentPage = currentPage ?? 1;
+        state.items = items;
       })
       .addCase(fetchMoviesByType.rejected, (state, action) => {
         state.loading = false;
@@ -69,9 +74,12 @@ const moviesSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(searchMoviesAsync.fulfilled, (state, action: PayloadAction<Movie[]>) => {
+      .addCase(searchMoviesAsync.fulfilled, (state, action) => {
+        const { items, totalPages, currentPage } = action.payload;
         state.loading = false;
-        state.items = action.payload;
+        state.items = items;
+        state.totalPages = totalPages;
+        state.currentPage = currentPage;
       })
       .addCase(searchMoviesAsync.rejected, (state, action) => {
         state.loading = false;
