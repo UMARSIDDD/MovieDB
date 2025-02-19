@@ -5,7 +5,9 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['image.tmdb.org'],
+    remotePatterns: [{
+      hostname: 'image.tmdb.org',
+    }]
   },
 };
 

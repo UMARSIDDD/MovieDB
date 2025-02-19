@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect } from "react";
 import {
   Container,
   Typography,
@@ -8,10 +8,11 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../store/store";
-import { fetchMoviesByType, setCurrentPage } from "../../store/movies/moviesSlice";
-import MovieGrid from "../../components/MovieGrid";
+
 import CustomPagination from "@/src/components/CustomPagination";
+import { AppDispatch, RootState } from "@/src/store/store";
+import { fetchMoviesByType, setCurrentPage } from "@/src/store/movies/moviesSlice";
+import MovieGrid from "../../MovieGrid";
 
 export default function TopRated() {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,7 +22,8 @@ export default function TopRated() {
     error,
     totalPages,
     currentPage,
-  } = useSelector((state: RootState) => state.movies);
+  } = useSelector((state: RootState): RootState['movies'] => state.movies);
+
  
   useEffect(() => {
     dispatch(fetchMoviesByType({ type: "top_rated", page: currentPage }));

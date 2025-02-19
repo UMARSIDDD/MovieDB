@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Movie } from '../types';
-import { fetchMovies, searchMovies } from '../lib/tmdb';
+import { Movie } from '../../types';
+import { fetchMovies, searchMovies } from '../../lib/tmdb';
 
 interface MoviesState {
   items: Movie[];

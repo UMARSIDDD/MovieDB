@@ -7,7 +7,7 @@ import {
   fetchMoviesByType,
   searchMoviesAsync,
   setCurrentPage,
-} from "../store/moviesSlice";
+} from "../store/movies/moviesSlice";
 import { AppDispatch, RootState } from "../store/store";
 import MovieGrid from "../components/MovieGrid";
 import CustomPagination from "../components/CustomPagination";

@@ -1,19 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  Container,
-  Typography,
-  Box,
-  CircularProgress,
-} from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../store/store";
-import { fetchMoviesByType, setCurrentPage } from "../../store/movies/moviesSlice";
-import MovieGrid from "../../components/MovieGrid";
-import CustomPagination from "@/src/components/CustomPagination";
+import { useCallback, useEffect } from "react";
+import { Container, Typography, Box, CircularProgress } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchMoviesByType, searchMoviesAsync, setCurrentPage } from "@/src/store/movies/moviesSlice";
+import CustomPagination from "../CustomPagination";
+import MovieGrid from "../MovieGrid";
+import { AppDispatch, RootState } from "@/src/store/store";
 
-export default function TopRated() {
+export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
   const {
     items: movies,
@@ -21,16 +16,23 @@ export default function TopRated() {
     error,
     totalPages,
     currentPage,
-  } = useSelector((state: RootState) => state.movies);
- 
-  useEffect(() => {
-    dispatch(fetchMoviesByType({ type: "top_rated", page: currentPage }));
-  }, [currentPage]); 
+    searchQuery,
+  } = useSelector((state: RootState): RootState['movies'] => state.movies);
 
-  const handlePageChange = useCallback((event: React.ChangeEvent<unknown>, value: number) => {
-    console.log("Page changed to:", value);
-    dispatch(setCurrentPage(value));
-  }, []);
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      dispatch(searchMoviesAsync({ query: searchQuery, page: currentPage }));
+    } else {
+      dispatch(fetchMoviesByType({ type: "popular", page: currentPage }));
+    }
+  }, [currentPage, searchQuery]);
+
+  const handlePageChange = useCallback(
+    (event: React.ChangeEvent<unknown>, value: number) => {
+      dispatch(setCurrentPage(value));
+    },
+    [dispatch]
+  );
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>

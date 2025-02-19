@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect} from "react";
 import { Container, Typography, Box, CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { fetchMoviesByType, setCurrentPage } from "../../store/moviesSlice";
+import { fetchMoviesByType, setCurrentPage } from "../../store/movies/moviesSlice";
 import MovieGrid from "../../components/MovieGrid";
 import CustomPagination from "@/src/components/CustomPagination";
 

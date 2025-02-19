@@ -8,7 +8,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDebounce } from '../hooks/useDebounce';
-import { setCurrentPage, setSearchQuery } from '../store/moviesSlice';
+import { setCurrentPage, setSearchQuery } from '../store/movies/moviesSlice';
 import { AppDispatch, RootState } from '../store/store';
 
 export default function Navbar() {
@@ -23,6 +23,7 @@ export default function Navbar() {
   const { searchQuery } = useSelector((state: RootState) => state.movies);
 
   const debouncedSearch = useDebounce(searchQuery, 1000);
+
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setSearchQuery(e.target.value));
